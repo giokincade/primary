@@ -1,0 +1,11 @@
+#! /bin/bash
+function docker_run {
+    docker run \
+        $DOCKER_ARGS \
+        --env-file env \
+        --env-file python_path_env \
+        -it --rm \
+        -v $(pwd):/home/jovyan \
+        primary_notebooks2 \
+        $@
+}

@@ -1,0 +1,8 @@
+#! /bin/bash
+set -e
+set -x
+
+source common
+DOCKER_ARGS="-p 8888:8888 --memory 10g"
+docker_run start-notebook.sh \
+    --config='/home/jovyan/.jupyter/jupyter_notebook_config.py'

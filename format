@@ -1,0 +1,8 @@
+#! /bin/bash
+set -e
+set -x
+
+source common
+docker_run autoflake -r --in-place --remove-unused-variables .
+docker_run isort -rc .
+docker_run black .

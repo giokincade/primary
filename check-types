@@ -1,0 +1,6 @@
+#! /bin/bash
+set -e
+set -x
+
+source common
+docker_run mypy .
