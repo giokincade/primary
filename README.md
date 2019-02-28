@@ -1,4 +1,4 @@
-This repo is a portable, re-runnable, snapshot of the analytics investigation Related Works did for Octopart. It's mostly python, pandas, matplotlib, and Jupyter.
+This repo is a portable, re-runnable, snapshot of the analytics investigation Related Works did for Primary. It's mostly python, pandas, matplotlib, and Jupyter.
 
 # Setup
 The only software you need to install is [Docker](https://www.docker.com/).
@@ -20,11 +20,9 @@ Step 2/13 : USER root
 ## Store Secrets in the `env` file.
 Passwords and other secrets are transmitted to the container via a git-ignored  `env` file in the project root. You'll need to create one with the following entries:
 ```
-DB_HOST=<redshift_dns_name>
-DB_USER=<redshift_user>
-DB_PASSWORD=<redshift_password>
-DEBUG_API_USER=<debug_api_http_user>
-DEBUG_API_PASSWORD=<debug_api_http_password>
+MIXPANEL_API_SECRET=<mixpannel_api_secret>
+SNOWFLAKE_USER=<snowflake_user>
+SNOWFLAKE_PASSWORD=<snowflake_password>
 ```
 Make sure to to restrict it's permissions:
 ```
@@ -60,7 +58,7 @@ There are a number of convenient scripts at the root of the repository:
 
 * `notebooks` is where all the Jupyter Notebooks live. This tends to be the entry-point for analysis.
 * `analysis` is where the core analysis logic lives. Jupyter notebook can quickly become a mess so I tend to put all logic in separate python modules.
-* `lib` is where re-usable library code, like functions to pull DataFrames from Redshift, live.
+* `lib` is where re-usable library code, like functions to pull DataFrames from Snowflake, live.
 * `sql` is where all the sql files live.
 * `tests` is where all the tests live, in a directory-structure that mirrors the outer repo.
 * `static_data` is for storing small static datasets, like the list of categories.
