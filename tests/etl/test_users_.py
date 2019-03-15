@@ -49,8 +49,8 @@ class UsersTest(TestCase):
     ):
         read_csv_mock.return_value = pd.DataFrame([["gigi@gmail.com"]], columns=[Cols.EMAIL])
         _get_users_from_looker_export_mock.return_value = pd.DataFrame(
-            [["gigi@gmail.com", datetime(2019, 1, 25), 1.0]],
-            columns=[Cols.EMAIL, Cols.FIRST_ORDER_DATE, Cols.LIFETIME_ORDERS],
+            [["gigi@gmail.com", datetime(2019, 1, 25), 1.0, 60.0]],
+            columns=[Cols.EMAIL, Cols.FIRST_ORDER_DATE, Cols.LIFETIME_ORDERS, Cols.LIFETIME_GPR],
         )
         mixpanel = pd.DataFrame(
             [["gigi@gmail.com", 30, 2]],

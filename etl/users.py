@@ -20,7 +20,7 @@ def get_users() -> pd.DataFrame:
     ).pipe(
         _calculate_frequency_fields
     ).pipe(
-        _calculate_deciles
+        _calculate_buckets
     ).pipe(
         _cast_fields
     )
@@ -53,7 +53,7 @@ def _rename_fields(users: pd.DataFrame) -> pd.DataFrame:
     return users.rename(columns=_RENAME_MAP)
 
 def _join_pilot_users(users: pd.DataFrame) -> pd.DataFrame:
-    pilot_users = read_csv(DATA_DIR + "box_users.csv")
+    pilot_users = read_csv(DATA_DIR + "box_buyers.csv")
     pilot_users[Cols.EMAIL] = pilot_users[Cols.EMAIL].apply(lambda e: e.lower().strip())
     pilot_users[Cols.IS_PILOT_BOX_BUYER] = 1.0
 
@@ -91,14 +91,31 @@ def _calculate_frequency_fields(users: pd.DataFrame) -> pd.DataFrame:
     return users
 
 
-def _calculate_deciles(users: pd.DataFrame) -> pd.DataFrame:
+def _calculate_buckets(users: pd.DataFrame) -> pd.DataFrame:
     users[Cols.FIRST_ORDER_MONTH] = users[Cols.FIRST_ORDER_DATE].apply(
         lambda d: datetime(d.year, d.month, 1)
     )
+    users[Cols.LIFETIME_AOV] = users[Cols.LIFETIME_GPR] / users[Cols.LIFETIME_ORDERS]
+
     if len(users) > 10:
         users[Cols.LIFETIME_ORDERS_DECILE] = pd.qcut(
             users[Cols.LIFETIME_ORDERS], 10, labels=False, duplicates="drop"
         )
+
+        users[Cols.LIFETIME_ORDERS_BUCKET] = pd.cut(
+            users[Cols.LIFETIME_ORDERS],
+            bins=[1, 2, 3, 4, 5, 6, 11, users[Cols.LIFETIME_ORDERS].max() + 1],
+            labels=["1", "2", "3", "4", "5", "6-10", "11+"],
+            right=False,
+        )
+        users[Cols.LIFETIME_AOV_BUCKET] = pd.cut(
+            users[Cols.LIFETIME_AOV],
+            bins=[0, 50, 101, users[Cols.LIFETIME_AOV].max() + 1],
+            labels=["<50", "50-100", "100+"],
+            right=False,
+        )
+
+
     return users
 
 

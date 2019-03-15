@@ -106,7 +106,10 @@ class UserColumns(Enum):
     FIRST_ORDER_DIVISION = "first_order_division"
     LIFETIME_GPR = "lifetime_gpr"
     LIFETIME_ORDERS = "lifetime_orders"
+    LIFETIME_ORDERS_BUCKET = "lifetime_orders_bucket"
     LIFETIME_UNITS = "lifetime_units"
+    LIFETIME_AOV = "lifetime_aov"
+    LIFETIME_AOV_BUCKET = "lifetime_aov_bucket"
     LIFETIME_ORDERS_DECILE = "lifetime_orders_decile"
     DAYS = "days"
     DAYS_RETAINED = "days_retained"
@@ -132,6 +135,7 @@ class UserColumns(Enum):
             cls.LIFETIME_GPR: float,
             cls.LIFETIME_ORDERS: int,
             cls.LIFETIME_UNITS: int,
+            cls.LIFETIME_AOV: float,
             cls.DAYS_RETAINED_PER_VISIT: float,
             cls.ORDER_FREQUENCY: float,
             cls.AVG_DAYS_BETWEEN_ORDERS: float,
