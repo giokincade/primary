@@ -416,19 +416,41 @@ def pilot_user_heatmap(users: pd.DataFrame):
     plt.ylabel("User Lifetime Orders")
     plt.show()
 
-    users["quarters_retained"] = users[UserColumns.DAYS_RETAINED].apply(
-        lambda d: d / 90.0 if d >= 90.0 else 1.0
+    heatmap = users.groupby([UserColumns.ORDERS_PER_QUARTER_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
+        UserColumns.IS_PILOT_BOX_BUYER
+    ].unstack(
+    ).fillna(
+        0
+    ).astype(
+        int
     )
 
-    users["orders_per_quarter"] = users[UserColumns.LIFETIME_ORDERS] / users["quarters_retained"]
-    users["orders_per_quarter_bucket"] = pd.cut(
-        users["orders_per_quarter"],
-        bins=[0, 0.5, 1.0, 1.5, 2, users["orders_per_quarter"].max() + 1],
-        labels=["<0.5", "0.5", "1.0", "1.5", "2+"],
-        right=False
+    sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
+    plt.gcf().axes[0].invert_yaxis()
+    plt.gcf().suptitle("Pilot Box Users")
+    plt.xlabel("AOV")
+    plt.ylabel("Orders per Quarter")
+    plt.show()
+
+def marketing_opt_out(users: pd.DataFrame):
+    init_plt()
+    heatmap = users.groupby([UserColumns.LIFETIME_ORDERS_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
+        UserColumns.IS_PILOT_BOX_BUYER
+    ].unstack(
+    ).fillna(
+        0
+    ).astype(
+        int
     )
 
-    heatmap = users.groupby(["orders_per_quarter_bucket", UserColumns.LIFETIME_AOV_BUCKET]).sum()[
+    sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
+    plt.gcf().axes[0].invert_yaxis()
+    plt.gcf().suptitle("Pilot Box Users")
+    plt.xlabel("User AOV")
+    plt.ylabel("User Lifetime Orders")
+    plt.show()
+
+    heatmap = users.groupby([UserColumns.ORDERS_PER_QUARTER_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
         UserColumns.IS_PILOT_BOX_BUYER
     ].unstack(
     ).fillna(

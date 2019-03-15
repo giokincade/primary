@@ -18,6 +18,8 @@ def get_users() -> pd.DataFrame:
     ).pipe(
         _join_pilot_users
     ).pipe(
+        _join_marketing_opt_out
+    ).pipe(
         _calculate_frequency_fields
     ).pipe(
         _calculate_buckets
@@ -63,6 +65,19 @@ def _join_pilot_users(users: pd.DataFrame) -> pd.DataFrame:
         how="left"
     )
     users[Cols.IS_PILOT_BOX_BUYER] = users[Cols.IS_PILOT_BOX_BUYER].fillna(0.0)
+    return users
+
+def _join_marketing_opt_out(users: pd.DataFrame) -> pd.DataFrame:
+    optout_users = read_csv(DATA_DIR + "marketing_opt_out.csv", names=[Cols.EMAIL])
+    optout_users[Cols.EMAIL] = optout_users[Cols.EMAIL].apply(lambda e: e.lower().strip())
+    optout_users[Cols.IS_MARKETING_OPT_OUT] = 1.0
+
+    users = users.join(
+        optout_users.set_index(Cols.EMAIL),
+        on=Cols.EMAIL,
+        how="left"
+    )
+    users[Cols.IS_MARKETING_OPT_OUT] = users[Cols.IS_MARKETING_OPT_OUT].fillna(0.0)
     return users
 
 
