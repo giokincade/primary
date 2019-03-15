@@ -113,6 +113,7 @@ class UserColumns(Enum):
     LIFETIME_ORDERS_DECILE = "lifetime_orders_decile"
     DAYS = "days"
     DAYS_RETAINED = "days_retained"
+    QUARTERS_RETAINED = "quarters_retained"
     DAYS_RETAINED_PER_VISIT = "days_retained_per_visit"
     ORDER_FREQUENCY = "order_frequency"
     MIN_VISIT_TIME = "min_visit_time"
@@ -125,6 +126,8 @@ class UserColumns(Enum):
     MIN_DAYS_BETWEEN_VISITS = "min_days_between_visits"
     MAX_DAYS_BETWEEN_VISITS = "max_days_between_visits"
     IS_PILOT_BOX_BUYER = "is_pilot_box_buyer"
+    ORDERS_PER_QUARTER = "orders_per_quarter"
+    ORDERS_PER_QUARTER_BUCKET = "orders_per_quarter_bucket"
 
     @classmethod
     def types(cls):
@@ -136,6 +139,8 @@ class UserColumns(Enum):
             cls.LIFETIME_ORDERS: int,
             cls.LIFETIME_UNITS: int,
             cls.LIFETIME_AOV: float,
+            cls.DAYS_RETAINED: int,
+            cls.QUARTERS_RETAINED: float,
             cls.DAYS_RETAINED_PER_VISIT: float,
             cls.ORDER_FREQUENCY: float,
             cls.AVG_DAYS_BETWEEN_ORDERS: float,

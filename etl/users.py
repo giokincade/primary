@@ -114,7 +114,12 @@ def _calculate_buckets(users: pd.DataFrame) -> pd.DataFrame:
             labels=["<50", "50-100", "100+"],
             right=False,
         )
-
+        users[Cols.ORDERS_PER_QUARTER_BUCKET] = pd.cut(
+            users[Cols.ORDERS_PER_QUARTER],
+            bins=[0, 0.5, 1.0, 1.5, 2, users[Cols.ORDERS_PER_QUARTER].max() + 1],
+            labels=["<0.5", "0.5", "1.0", "1.5", "2+"],
+            right=False
+        )
 
     return users
 
@@ -130,6 +135,11 @@ def _join_mixpanel_stats(users: pd.DataFrame) -> pd.DataFrame:
     joined[Cols.DAYS_RETAINED_PER_VISIT] = joined[Cols.DAYS_RETAINED_PER_VISIT].apply(
         lambda d: 1.0 if d < 1 else d
     )
+
+    joined[Cols.QUARTERS_RETAINED] = joined[Cols.DAYS_RETAINED].apply(
+        lambda d: d / 90.0 if d >= 90.0 else 1.0
+    )
+    joined[Cols.ORDERS_PER_QUARTER] = joined[Cols.LIFETIME_ORDERS] / joined[Cols.QUARTERS_RETAINED]
     return joined
 
 
