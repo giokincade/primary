@@ -39,11 +39,15 @@ class UsersTest(TestCase):
         )
         assert (expected.equals(users[expected.columns]))
 
+    @patch("etl.users.read_csv")
     @patch("etl.users.sql_to_df")
     @patch("etl.users._get_users_from_looker_export")
     def test_users(
-        self, _get_users_from_looker_export_mock: Mock, sql_to_df_mock: Mock
+        self, _get_users_from_looker_export_mock: Mock,
+        sql_to_df_mock: Mock,
+        read_csv_mock: Mock
     ):
+        read_csv_mock.return_value = pd.DataFrame([["gigi@gmail.com"]], columns=[Cols.EMAIL])
         _get_users_from_looker_export_mock.return_value = pd.DataFrame(
             [["gigi@gmail.com", datetime(2019, 1, 25), 1.0]],
             columns=[Cols.EMAIL, Cols.FIRST_ORDER_DATE, Cols.LIFETIME_ORDERS],

@@ -16,6 +16,8 @@ def get_users() -> pd.DataFrame:
     return _get_users_from_looker_export().pipe(_join_mixpanel_stats).pipe(
         _join_first_order_facts
     ).pipe(
+        _join_pilot_users
+    ).pipe(
         _calculate_frequency_fields
     ).pipe(
         _calculate_deciles
@@ -57,7 +59,8 @@ def _join_pilot_users(users: pd.DataFrame) -> pd.DataFrame:
 
     users = users.join(
         pilot_users.set_index(Cols.EMAIL),
-        on=Cols.EMAIL
+        on=Cols.EMAIL,
+        how="left"
     )
     users[Cols.IS_PILOT_BOX_BUYER] = users[Cols.IS_PILOT_BOX_BUYER].fillna(0.0)
     return users
