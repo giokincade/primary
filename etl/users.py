@@ -50,6 +50,18 @@ _RENAME_MAP = {
 def _rename_fields(users: pd.DataFrame) -> pd.DataFrame:
     return users.rename(columns=_RENAME_MAP)
 
+def _join_pilot_users(users: pd.DataFrame) -> pd.DataFrame:
+    pilot_users = read_csv(DATA_DIR + "box_users.csv")
+    pilot_users[Cols.EMAIL] = pilot_users[Cols.EMAIL].apply(lambda e: e.lower().strip())
+    pilot_users[Cols.IS_PILOT_BOX_BUYER] = 1.0
+
+    users = users.join(
+        pilot_users.set_index(Cols.EMAIL),
+        on=Cols.EMAIL
+    )
+    users[Cols.IS_PILOT_BOX_BUYER] = users[Cols.IS_PILOT_BOX_BUYER].fillna(0.0)
+    return users
+
 
 @timecall
 def _cast_fields(users: pd.DataFrame) -> pd.DataFrame:
