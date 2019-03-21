@@ -401,7 +401,7 @@ def days_between_events_by_lifetime_orders(users: pd.DataFrame):
 def pilot_user_heatmap(users: pd.DataFrame):
     init_plt()
     heatmap = users.groupby([UserColumns.LIFETIME_ORDERS_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
-        UserColumns.IS_PILOT_BOX_BUYER
+        UserColumns.IS_PICKS_BUYER
     ].unstack(
     ).fillna(
         0
@@ -417,7 +417,7 @@ def pilot_user_heatmap(users: pd.DataFrame):
     plt.show()
 
     heatmap = users.groupby([UserColumns.ORDERS_PER_QUARTER_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
-        UserColumns.IS_PILOT_BOX_BUYER
+        UserColumns.IS_PICKS_BUYER
     ].unstack(
     ).fillna(
         0

@@ -125,7 +125,7 @@ class UserColumns(Enum):
     AVG_DAYS_BETWEEN_VISITS = "avg_days_between_visits"
     MIN_DAYS_BETWEEN_VISITS = "min_days_between_visits"
     MAX_DAYS_BETWEEN_VISITS = "max_days_between_visits"
-    IS_PILOT_BOX_BUYER = "is_pilot_box_buyer"
+    IS_PICKS_BUYER = "is_picks_buyer"
     IS_PICKS_WAITLIST = "is_picks_waitlist"
     IS_MARKETING_OPT_OUT = "is_marketing_opt_out"
     ORDERS_PER_QUARTER = "orders_per_quarter"
@@ -151,5 +151,5 @@ class UserColumns(Enum):
             cls.AVG_DAYS_BETWEEN_VISITS: float,
             cls.MIN_DAYS_BETWEEN_VISITS: float,
             cls.MAX_DAYS_BETWEEN_VISITS: float,
-            cls.IS_PILOT_BOX_BUYER: int
+            cls.IS_PICKS_BUYER: int
         }

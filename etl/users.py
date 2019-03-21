@@ -18,7 +18,7 @@ def get_users() -> pd.DataFrame:
     ).pipe(
         _join_user_list,
         file="primary_picks_pilot_buyers.csv",
-        column=Cols.IS_PILOT_BOX_BUYER
+        column=Cols.IS_PICKS_BUYER
     ).pipe(
         _join_user_list,
         file="primary_picks_waitlist.csv",
@@ -66,7 +66,7 @@ def _rename_fields(users: pd.DataFrame) -> pd.DataFrame:
 def _join_user_list(
     users: pd.DataFrame,
     file="box_buyers.csv",
-    column=Cols.IS_PILOT_BOX_BUYER
+    column=Cols.IS_PICKS_BUYER
 ) -> pd.DataFrame:
     """
     Denote the presence of each user in `file` with an indicator in `column`.
