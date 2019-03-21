@@ -435,7 +435,7 @@ def pilot_user_heatmap(users: pd.DataFrame):
 def marketing_opt_out(users: pd.DataFrame):
     init_plt()
     heatmap = users.groupby([UserColumns.LIFETIME_ORDERS_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
-        UserColumns.IS_PILOT_BOX_BUYER
+        UserColumns.IS_MARKETING_OPT_OUT
     ].unstack(
     ).fillna(
         0
@@ -445,13 +445,38 @@ def marketing_opt_out(users: pd.DataFrame):
 
     sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
     plt.gcf().axes[0].invert_yaxis()
-    plt.gcf().suptitle("Pilot Box Users")
-    plt.xlabel("User AOV")
-    plt.ylabel("User Lifetime Orders")
+    plt.gcf().suptitle("Marketing Opt-Out Users")
+    plt.xlabel("AOV")
+    plt.ylabel("Lifetime Orders")
     plt.show()
 
-    heatmap = users.groupby([UserColumns.ORDERS_PER_QUARTER_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
-        UserColumns.IS_PILOT_BOX_BUYER
+    total_users_heatmap = users.groupby(
+        [UserColumns.LIFETIME_ORDERS_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]
+    ).count(
+    )[UserColumns.EMAIL].unstack(
+    ).fillna(
+        0
+    ).astype(
+        int
+    )
+    percentage_map = heatmap / total_users_heatmap
+
+    sns.heatmap(
+        percentage_map,
+        cmap=sns.light_palette(Colors.PINK_DARK),
+        annot=True,
+        fmt=".0%"
+    )
+    plt.gcf().axes[0].invert_yaxis()
+    plt.gcf().suptitle("Marketing Opt-Out Users")
+    plt.xlabel("AOV")
+    plt.ylabel("Lifetime Orders")
+    plt.show()
+
+    heatmap = users.groupby(
+        [UserColumns.ORDERS_PER_QUARTER_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]
+    ).sum()[
+        UserColumns.IS_MARKETING_OPT_OUT
     ].unstack(
     ).fillna(
         0
@@ -461,7 +486,7 @@ def marketing_opt_out(users: pd.DataFrame):
 
     sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
     plt.gcf().axes[0].invert_yaxis()
-    plt.gcf().suptitle("Pilot Box Users")
+    plt.gcf().suptitle("Marketing Opt-Out Users")
     plt.xlabel("AOV")
     plt.ylabel("Orders per Quarter")
     plt.show()

@@ -16,9 +16,17 @@ def get_users() -> pd.DataFrame:
     return _get_users_from_looker_export().pipe(_join_mixpanel_stats).pipe(
         _join_first_order_facts
     ).pipe(
-        _join_pilot_users
+        _join_user_list,
+        file="primary_picks_pilot_buyers.csv",
+        column=Cols.IS_PILOT_BOX_BUYER
     ).pipe(
-        _join_marketing_opt_out
+        _join_user_list,
+        file="primary_picks_waitlist.csv",
+        column=Cols.IS_PICKS_WAITLIST
+    ).pipe(
+        _join_user_list,
+        file="marketing_opt_out.csv",
+        column=Cols.IS_MARKETING_OPT_OUT
     ).pipe(
         _calculate_frequency_fields
     ).pipe(
@@ -54,30 +62,25 @@ _RENAME_MAP = {
 def _rename_fields(users: pd.DataFrame) -> pd.DataFrame:
     return users.rename(columns=_RENAME_MAP)
 
-def _join_pilot_users(users: pd.DataFrame) -> pd.DataFrame:
-    pilot_users = read_csv(DATA_DIR + "box_buyers.csv")
-    pilot_users[Cols.EMAIL] = pilot_users[Cols.EMAIL].apply(lambda e: e.lower().strip())
-    pilot_users[Cols.IS_PILOT_BOX_BUYER] = 1.0
+@timecall
+def _join_user_list(
+    users: pd.DataFrame,
+    file="box_buyers.csv",
+    column=Cols.IS_PILOT_BOX_BUYER
+) -> pd.DataFrame:
+    """
+    Denote the presence of each user in `file` with an indicator in `column`.
+    """
+    user_list = read_csv(DATA_DIR + file)
+    user_list[Cols.EMAIL] = user_list[Cols.EMAIL].apply(lambda e: e.lower().strip())
+    user_list[column] = 1.0
 
     users = users.join(
-        pilot_users.set_index(Cols.EMAIL),
+        user_list.set_index(Cols.EMAIL),
         on=Cols.EMAIL,
         how="left"
     )
-    users[Cols.IS_PILOT_BOX_BUYER] = users[Cols.IS_PILOT_BOX_BUYER].fillna(0.0)
-    return users
-
-def _join_marketing_opt_out(users: pd.DataFrame) -> pd.DataFrame:
-    optout_users = read_csv(DATA_DIR + "marketing_opt_out.csv", names=[Cols.EMAIL])
-    optout_users[Cols.EMAIL] = optout_users[Cols.EMAIL].apply(lambda e: e.lower().strip())
-    optout_users[Cols.IS_MARKETING_OPT_OUT] = 1.0
-
-    users = users.join(
-        optout_users.set_index(Cols.EMAIL),
-        on=Cols.EMAIL,
-        how="left"
-    )
-    users[Cols.IS_MARKETING_OPT_OUT] = users[Cols.IS_MARKETING_OPT_OUT].fillna(0.0)
+    users[column] = users[column].fillna(0.0)
     return users
 
 

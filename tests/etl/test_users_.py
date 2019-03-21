@@ -49,6 +49,7 @@ class UsersTest(TestCase):
     ):
         read_csv_mock.side_effect= [
             pd.DataFrame([["gigi@gmail.com"]], columns=[Cols.EMAIL]),
+            pd.DataFrame([["gigi@gmail.com"]], columns=[Cols.EMAIL]),
             pd.DataFrame([["gigi@gmail.com"]], columns=[Cols.EMAIL])
         ]
         _get_users_from_looker_export_mock.return_value = pd.DataFrame(
