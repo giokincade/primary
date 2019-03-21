@@ -525,3 +525,19 @@ def picks_waitlist_user_heatmap(users: pd.DataFrame):
     plt.ylabel("Orders per Quarter")
     plt.show()
 
+def kids_rate_heatmap(users: pd.DataFrame):
+    init_plt()
+    heatmap = users.groupby([UserColumns.LIFETIME_ORDERS_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).mean()[
+        UserColumns.FIRST_ORDER_HAS_KIDS
+    ].unstack(
+    ).fillna(
+        0
+    )
+
+    sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=".0%")
+    plt.gcf().axes[0].invert_yaxis()
+    plt.gcf().suptitle("Users with Kids in First Order")
+    plt.xlabel("AOV")
+    plt.ylabel("Lifetime Orders")
+    plt.show()
+    return heatmap

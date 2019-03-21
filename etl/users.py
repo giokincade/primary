@@ -167,7 +167,7 @@ def _join_first_order_facts(users: pd.DataFrame) -> pd.DataFrame:
     data[Cols.FIRST_ORDER_DIVISION] = data[Cols.FIRST_ORDER_DIVISION].replace(
         regex=r"\|unknown", value=""
     )
-    data[Cols.FIRST_ORDER_HAS_BABY] = data[Cols.FIRST_ORDER_DIVISION].isin(["baby", "baby|kids"]).astype(int)
-    data[Cols.FIRST_ORDER_HAS_KIDS] = data[Cols.FIRST_ORDER_DIVISION].isin(["kids", "baby|kids"]).astype(int)
+    data[Cols.FIRST_ORDER_HAS_BABY] = data[Cols.FIRST_ORDER_DIVISION].isin(["baby", "baby|kids"]).astype(int).astype(float) * 1.0
+    data[Cols.FIRST_ORDER_HAS_KIDS] = data[Cols.FIRST_ORDER_DIVISION].isin(["kids", "baby|kids"]).astype(int).astype(float) * 1.0
     joined = users.join(data, on=Cols.EMAIL, how="left")
     return joined
