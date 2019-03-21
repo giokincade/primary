@@ -158,6 +158,11 @@ def _join_mixpanel_stats(users: pd.DataFrame) -> pd.DataFrame:
         lambda d: d / 90.0 if d >= 90.0 else 1.0
     )
     joined[Cols.ORDERS_PER_QUARTER] = joined[Cols.LIFETIME_ORDERS] / joined[Cols.QUARTERS_RETAINED]
+
+    joined[Cols.YEARS_RETAINED] = joined[Cols.DAYS_RETAINED].apply(
+        lambda d: d / 365.0 if d >= 365.0 else 1.0
+    )
+    joined[Cols.ORDERS_PER_YEAR] = joined[Cols.LIFETIME_ORDERS] / joined[Cols.YEARS_RETAINED]
     return joined
 
 

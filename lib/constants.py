@@ -116,6 +116,7 @@ class UserColumns(Enum):
     DAYS = "days"
     DAYS_RETAINED = "days_retained"
     QUARTERS_RETAINED = "quarters_retained"
+    YEARS_RETAINED = "years_retained"
     DAYS_RETAINED_PER_VISIT = "days_retained_per_visit"
     ORDER_FREQUENCY = "order_frequency"
     MIN_VISIT_TIME = "min_visit_time"
@@ -131,6 +132,7 @@ class UserColumns(Enum):
     IS_PICKS_WAITLIST = "is_picks_waitlist"
     IS_MARKETING_OPT_OUT = "is_marketing_opt_out"
     ORDERS_PER_QUARTER = "orders_per_quarter"
+    ORDERS_PER_YEAR = "orders_per_year"
     ORDERS_PER_QUARTER_BUCKET = "orders_per_quarter_bucket"
 
     @classmethod
