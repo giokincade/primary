@@ -411,7 +411,7 @@ def pilot_user_heatmap(users: pd.DataFrame):
 
     sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
     plt.gcf().axes[0].invert_yaxis()
-    plt.gcf().suptitle("Pilot Box Users")
+    plt.gcf().suptitle("Primary Picks Box Buyers")
     plt.xlabel("User AOV")
     plt.ylabel("User Lifetime Orders")
     plt.show()
@@ -427,7 +427,7 @@ def pilot_user_heatmap(users: pd.DataFrame):
 
     sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
     plt.gcf().axes[0].invert_yaxis()
-    plt.gcf().suptitle("Pilot Box Users")
+    plt.gcf().suptitle("Primary Picks Box Buyers")
     plt.xlabel("AOV")
     plt.ylabel("Orders per Quarter")
     plt.show()
@@ -490,3 +490,38 @@ def marketing_opt_out(users: pd.DataFrame):
     plt.xlabel("AOV")
     plt.ylabel("Orders per Quarter")
     plt.show()
+
+def picks_waitlist_user_heatmap(users: pd.DataFrame):
+    init_plt()
+    heatmap = users.groupby([UserColumns.LIFETIME_ORDERS_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
+        UserColumns.IS_PICKS_WAITLIST
+    ].unstack(
+    ).fillna(
+        0
+    ).astype(
+        int
+    )
+
+    sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
+    plt.gcf().axes[0].invert_yaxis()
+    plt.gcf().suptitle("Primary Picks Waitlist Users")
+    plt.xlabel("User AOV")
+    plt.ylabel("User Lifetime Orders")
+    plt.show()
+
+    heatmap = users.groupby([UserColumns.ORDERS_PER_QUARTER_BUCKET, UserColumns.LIFETIME_AOV_BUCKET]).sum()[
+        UserColumns.IS_PICKS_WAITLIST
+    ].unstack(
+    ).fillna(
+        0
+    ).astype(
+        int
+    )
+
+    sns.heatmap(heatmap, cmap=sns.light_palette(Colors.PINK_DARK), annot=True, fmt=",")
+    plt.gcf().axes[0].invert_yaxis()
+    plt.gcf().suptitle("Primary Picks Waitlist Users")
+    plt.xlabel("AOV")
+    plt.ylabel("Orders per Quarter")
+    plt.show()
+
