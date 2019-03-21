@@ -104,6 +104,8 @@ class UserColumns(Enum):
     FIRST_ORDER_MONTH = "first_order_month"
     FIRST_ORDER_COLORS = "first_order_colors"
     FIRST_ORDER_DIVISION = "first_order_division"
+    FIRST_ORDER_HAS_BABY = "first_order_has_baby"
+    FIRST_ORDER_HAS_KIDS = "first_order_has_kids"
     LIFETIME_GPR = "lifetime_gpr"
     LIFETIME_ORDERS = "lifetime_orders"
     LIFETIME_ORDERS_BUCKET = "lifetime_orders_bucket"
