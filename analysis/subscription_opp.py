@@ -29,25 +29,47 @@ def orders_per_year(users: pd.DataFrame):
 
 def subscription_op_size(
     users: pd.DataFrame,
-    margin: 0.65,
-    shipping: 6.0
+    margin=0.65,
+    shipping= 6.0
 ):
+    init_plt()
     sorted = users.sort_values(UserColumns.ORDERS_PER_YEAR, ascending=False)[[
         UserColumns.ORDERS_PER_YEAR,
         UserColumns.LIFETIME_AOV
     ]].copy()
+    sorted["one"] = 1.0
 
     def new_subscription_orders(orders_per_year: int):
         return max(0 , 4.0 - math.floor(orders_per_year))
 
-    sorted["new_orders"] = sorted["orders_per_year"].apply(new_orders)
+    sorted["new_orders"] = sorted["orders_per_year"].apply(new_subscription_orders)
     sorted["new_revenue"] = sorted["new_orders"] * 68
     sorted["cumulative_new_revenue"] = sorted["new_revenue"].cumsum()
+    sorted["cumulative_users"] = sorted["one"].cumsum()
 
-    display(np.percentile(sorted["cumulative_new_revenue"], [10, 20, 3]))
-    percents = list(range(1,101))
+    sns.lineplot(
+        x="cumulative_users",
+        y="cumulative_new_revenue",
+        data=sorted
+    )
+    plt.gcf().suptitle("Additional Yearly Revenue based on Subscription Users")
+    plt.xlabel("Subscription Users")
+    plt.ylabel("Additional Yearly Revenue")
+    plt.show()
+
+    percents = list(range(1,51))
     opp_size = pd.DataFrame({
         "coverage_percentage": percents,
         "new_yearly_revenue": np.percentile(sorted["cumulative_new_revenue"], percents)
     })
     display(opp_size)
+
+    sns.lineplot(
+        x="coverage_percentage",
+        y="new_yearly_revenue",
+        data=opp_size
+    )
+    plt.gcf().suptitle("Additional Yearly Revenue based on Subscription Coverage")
+    plt.xlabel("Subscription Coverage Rate")
+    plt.ylabel("Additional Yearly Revenue")
+    plt.show()
