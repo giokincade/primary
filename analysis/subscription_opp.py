@@ -11,6 +11,8 @@ from lib.sql import sql_to_df
 from lib.viz import Colors, init_plt
 
 
+ASSUMED_BOX_PROFIT = 23.10
+
 def orders_per_year(users: pd.DataFrame):
     init_plt()
     sns.distplot(
@@ -44,7 +46,9 @@ def subscription_op_size(
 
     sorted["new_orders"] = sorted["orders_per_year"].apply(new_subscription_orders)
     sorted["new_revenue"] = sorted["new_orders"] * 68
+    sorted["new_profit"] = sorted["new_orders"] * 23.10
     sorted["cumulative_new_revenue"] = sorted["new_revenue"].cumsum()
+    sorted["cumulative_new_profit"] = sorted["new_profit"].cumsum()
     sorted["cumulative_users"] = sorted["one"].cumsum()
 
     sns.lineplot(
@@ -52,24 +56,31 @@ def subscription_op_size(
         y="cumulative_new_revenue",
         data=sorted
     )
+    plt.xlim(0, 50000)
+    plt.ylim(0, 2000000)
     plt.gcf().suptitle("Additional Yearly Revenue based on Subscription Users")
     plt.xlabel("Subscription Users")
     plt.ylabel("Additional Yearly Revenue")
     plt.show()
 
+    sns.lineplot(
+        x="cumulative_users",
+        y="cumulative_new_profit",
+        data=sorted
+    )
+    plt.xlim(0, 50000)
+    plt.ylim(0, 600000)
+    plt.gcf().suptitle("Additional Yearly Profit based on Subscription Users")
+    plt.xlabel("Subscription Users")
+    plt.ylabel("Additional Yearly Profit")
+    plt.show()
+
+
     percents = list(range(1,51))
     opp_size = pd.DataFrame({
         "coverage_percentage": percents,
-        "new_yearly_revenue": np.percentile(sorted["cumulative_new_revenue"], percents)
+        "cumulative_new_revenue": np.percentile(sorted["cumulative_new_revenue"], percents),
+        "cumulative_new_profit": np.percentile(sorted["cumulative_new_profit"], percents),
+        "cumulative_users": np.percentile(sorted["cumulative_users"], percents)
     })
     display(opp_size)
-
-    sns.lineplot(
-        x="coverage_percentage",
-        y="new_yearly_revenue",
-        data=opp_size
-    )
-    plt.gcf().suptitle("Additional Yearly Revenue based on Subscription Coverage")
-    plt.xlabel("Subscription Coverage Rate")
-    plt.ylabel("Additional Yearly Revenue")
-    plt.show()
